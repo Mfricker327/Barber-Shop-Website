@@ -12,6 +12,8 @@ const callBtn = document.getElementById("callBtn");
 const phoneLink = document.getElementById("phoneLink");
 const heading = document.getElementById("heroHeading");
 const featureGrid = document.getElementById("featureGrid");
+const nav = document.getElementById("nav");
+const siteHeader = document.querySelector("site-header");
 // -------- Services Data (Array of Objects) ---------//
 const services = [
     {
@@ -67,6 +69,27 @@ const updateHeadingText = (newText) => {
   if (!heading) return;
   heading.textContent = newText;
 };
+//Make navbar stick on scroll (Sticky NavBar)
+const handleHeaderOnScroll = () => {
+  if (!siteHeader) return;
+  if (window.scrollY > 10) {
+    siteHeader.classList.add("is-scrolled");
+  } else {
+    siteHeader.classList.remove("is-scrolled");
+  }
+};
+//-- Modal Logic------
+//Opens the modal
+const openServiceModal = (serviceId) => {
+  if (
+    !serviceModal ||
+    !serviceModalTitle||
+    !serviceModalPrice||
+    !serviceModalList
+  )
+  return;
+  const selectedService = services.find()
+}
 //------Event Listener -----------
 // 10 Set year on page load
 setCurrentYear();
@@ -85,13 +108,13 @@ if (mobileMenu) {
     }
   });
 }
-// 40 CTA Button" "Book Now" (placeholder behavior)
+// 4) CTA Button" "Book Now" (placeholder behavior)
 if (ctaBtn) {
   ctaBtn.addEventListener("click", () => {
     updateHeadingText("Booking coming next - great choice!");
   });
 }
-// 50 Call Button: try to use the phone number in the footer
+// 5) Call Button: try to use the phone number in the footer
 if (callBtn) {
   callBtn.addEventListener("click", () => {
     // If you later set phoneLink href to then this will work perfectly
@@ -102,6 +125,21 @@ if (callBtn) {
       updateHeadingText("Call feature coming next!");
     }
   });
+}
+//6) Round corners of navBar on scroll
+window.addEventListener("scroll",  handleHeaderOnScroll);
+if (callBtn) {
+  callBtn.addEventListener("click", () => {
+    window.location.href = `tel:${shopInfo.phoneRaw}`;
+  });
+}
+//7) Opens the modals for the card clicked
+if (featureGrid) {
+  featureGrid.addEventListener("click", (event) => {
+    const clickButton = event.target.closets(". service-details-btn");
+    if (!clickButton) return;
+const serviceId = clickedButton
+  })
 }
 // ------Render Features using forEach --------//
 const renderFeatures = () => {
@@ -161,4 +199,5 @@ return `
 renderFeatures();
 //renderFeaturesMap();
 renderNavigation();
-
+handleHeaderOnScroll();
+renderServices();
