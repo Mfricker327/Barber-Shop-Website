@@ -10,7 +10,7 @@ const nextMonthBtn = document.getElementById("nextMonthBtn");
 const selectedDateText = document.getElementById("selectedDateText");
 const timeSlots = document.getElementById("timeSlots");
 const bookingForm = document.getElementById("bookingForm");
-const cusotmerName = document.getElementById("customerName");
+const customerName = document.getElementById("customerName");
 const customerService = document.getElementById("customerService");
 const selectedTimeInput = document.getElementById("selectedTimeInput");
 const bookingMessage = document.getElementById("bookingMessage");
@@ -187,7 +187,87 @@ for (let i = 0; i < slots.length; i++) {
     if (bookedForDay.includes(slot)) {
         slotBtn.classList.add("disabled");
         slotBtn.disabled = true;
+        slotBtn.textContent = `${slot} - Booked`;
     }
+    if (selectedTime === slot) {
+        slotBtn.classList.add("selected");
+    }
+    slotBtn.addEventListener("click", () => {
+        selectedTime = slot;
+        selectedTimeInput = slot;
+        renderTimeSlots();
+    });
+    timeSlots.appendChild(slotBtn);
+}
+};
+//--------MOnth Navigation (prev/ next onth buttons)------
+if (prevMonthBtn) {
+    prevMonthBtn.addEventListener("click", () => {
+        currentMonth--;
+        if (currentMonth <0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        renderCalendar();
+    });
+}
+if (nextMonthBtn) {
+    nextMonthBtn.addEventListener("click", () => {
+        currentMonth++;
+        if (currentMonth > 11){
+            currentMonth = 0;
+            currentYear++;
+        }
+        renderCalendar();
+    });
+}
+//-----Booking Submit (validates forms and records appointmnets)--------
+if (bookingForm) {
+    bookingForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const nameValue = customerName.value.trim();
+        const serviceValue = customerService.value;
+const timeValue = selectedTimeInput.value;
+if (
+    nameValue === ""||
+    serviceValue === "" ||
+    !selectedDate ||
+    timeValue === ""
+) {
+    bookingMessage.textContent =
+    "Please choose a date, time, name, and service.";
+    bookingMessage.className = "booking-message error";
+    return;
+}
+if (!bookedAppointments[selectedDate.key]) {
+    bookedAppointments[selectedDate.key] = [];
+}
+if (bookedAppointments[selectedDate.key].includes(timeValue)) {
+    bookingMessage.textContent =
+    "That time was just taken. Please choose another.";
+    bookingMessage.className = "booking-message error";
+    renderTimeSlots();
+    return;
+}
+bookedAppointmnets[selectedDate.key].push(timeValue);
+bookingMessage.textContent = `${nameValue}, your ${serviceValue} appointment is 
+booked for ${formatReadableDate(
+selectedDate.year,
+selectedDate.month,
+selectedDate.day,
+)} at ${timeValue}.`;
+ bookingMessage.className = "booking-message success";
+ bookingForm.requestFullscreen();
+ selectedTime = "";
+ selectedTimeInput.value = "";
+ renderTimeSlots();
+    });
+}
+// --------- App start (firstdraw when page loads)--------
+renderCalendar();
+renderTimeSlots();
 
-}
-}
+/* ================================================
+FUNCITON REFERENCE: what each funciton does and how
+=======================================
+
